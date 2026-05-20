@@ -1,51 +1,32 @@
-#include <Arduino.h>
-#include <DHT.h>
+#include "ButtonHandler.h"
+#include "DHT11Component.h"
+#include "PlantSupervisionSystem.h"
 
-#include "State.h"
-#include "Utils.h"
+const unsigned long MEASUREMENT_INTERVAL = 5000;
+unsigned long g_lastMeasurementTime = 0;
 
-const int LED_PIN = 13;
-const int DHT_PIN = 2;
+namespace SystemStorage
+{
+    DHT11Component g_dht11(7);
+    ButtonHandler g_buttonHandler(2);
+}
 
-DHT dht(DHT_PIN, DHT11);
+PlantSupervisionSystem<1> g_plantSupervisionSystem;
 
 void setup()
 {
-    pinMode(LED_PIN, OUTPUT);
-    dht.begin();
-    Serial.begin(9600);
-    Serial.println("Plant Supervision System Initialized!");
-    
-    // TODO: Investigate interrupts and millis() for the Arduino
-    // attachInterrupt(digitalPinToInterrupt(DHT_PIN), []()
-    //                 { Serial << F("Current state: ") << State::Measuring << F("\n"); }, CHANGE);
+    g_plantSupervisionSystem.AddComponent(&SystemStorage::g_dht11);
+    g_plantSupervisionSystem.AddInterruptHandler(&SystemStorage::g_buttonHandler);
+    g_plantSupervisionSystem.Setup();
 }
 
 void loop()
 {
-    float humidity = dht.readHumidity();
-    float temperature = dht.readTemperature();
-    float heatIndex = dht.computeHeatIndex(temperature, humidity, false);
+    unsigned long currentTime = millis();
 
-    if (isnan(humidity) || isnan(temperature))
+    if (currentTime - g_lastMeasurementTime >= MEASUREMENT_INTERVAL)
     {
-        Serial << F("Current state: ") << State::Error << F("\n");
-        delay(2000);
-        return;
+        g_lastMeasurementTime = currentTime;
+        g_plantSupervisionSystem.Loop();
     }
-
-    digitalWrite(LED_PIN, HIGH);
-    delay(1000);
-    digitalWrite(LED_PIN, LOW);
-    delay(1000);
-
-    Serial.print("Temperature: ");
-    Serial.print(temperature);
-    Serial.print("°C, Humidity: ");
-    Serial.print(humidity);
-    Serial.print("%, Heat Index: ");
-    Serial.print(heatIndex);
-    Serial.println("°C");
-
-    Serial.println("System Health: OK");
 }
