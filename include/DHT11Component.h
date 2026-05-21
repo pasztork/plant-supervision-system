@@ -2,9 +2,9 @@
 
 #include <DHT.h>
 
-#include "IComponent.h"
+#include "ISystemComponent.h"
 
-class DHT11Component : public IComponent
+class DHT11Component : public ISystemComponent
 {
 public:
     struct Measurement
@@ -14,7 +14,7 @@ public:
         float m_heatIndex;
     };
 
-    DHT11Component(uint8_t pin);
+    explicit DHT11Component(uint8_t pin);
     ~DHT11Component() = default;
 
     void Setup() override;

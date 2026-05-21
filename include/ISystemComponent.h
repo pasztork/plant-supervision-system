@@ -2,9 +2,8 @@
 
 #include "Time.h"
 
-class IComponent
+struct ISystemComponent
 {
-public:
     virtual void Setup() = 0;
     virtual void Loop() = 0;
 };

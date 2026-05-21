@@ -25,7 +25,7 @@ bool InterruptManager::RegisterInterruptHandler(IInterruptHandler *handler)
 {
     uint8_t interruptIndex = handler->GetPinNumber() - 2; // Assuming interrupts are on pins 2 and 3
 
-    if (interruptIndex < 0 || interruptIndex >= MAX_INTERRUPTS)
+    if (interruptIndex >= MAX_INTERRUPTS)
     {
         Serial << F("[ERROR] Invalid interrupt pin number: ") << handler->GetPinNumber() << F("\n");
         return false;

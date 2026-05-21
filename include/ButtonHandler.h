@@ -7,7 +7,7 @@
 class ButtonHandler : public IInterruptHandler
 {
 public:
-    ButtonHandler(uint8_t pin);
+    explicit ButtonHandler(uint8_t pin);
     ~ButtonHandler() = default;
 
     void OnInterrupt() override;

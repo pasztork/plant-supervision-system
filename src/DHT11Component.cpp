@@ -1,7 +1,7 @@
 #include "DHT11Component.h"
 #include "Utils.h"
 
-DHT11Component::DHT11Component(uint8_t pin) : m_dht(pin, DHT11) {}
+DHT11Component::DHT11Component(uint8_t pin) : m_dht(pin, DHT11), m_lastMeasurement{0, 0, 0} {}
 
 void DHT11Component::Setup()
 {

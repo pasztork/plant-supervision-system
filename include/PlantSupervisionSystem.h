@@ -3,13 +3,13 @@
 #include <Arduino.h>
 
 #include "Array.h"
-#include "IComponent.h"
 #include "IInterruptHandler.h"
 #include "InterruptManager.h"
+#include "ISystemComponent.h"
 #include "Utils.h"
 
 template <size_t N>
-class PlantSupervisionSystem : IComponent
+class PlantSupervisionSystem : ISystemComponent
 {
 public:
     void Setup() override
@@ -39,7 +39,7 @@ public:
         Serial << F("[INFO] System Health: OK\n");
     }
 
-    bool AddComponent(IComponent *component)
+    bool AddComponent(ISystemComponent *component)
     {
         bool foundSlot = false;
         for (size_t i = 0; i < m_components.size() && !foundSlot; i++)
@@ -98,6 +98,6 @@ private:
 
 private:
     bool m_initialized = false;
-    Array<IComponent *, N> m_components;
+    Array<ISystemComponent *, N> m_components;
     Array<IInterruptHandler *, 2> m_interruptHandlers;
 };
