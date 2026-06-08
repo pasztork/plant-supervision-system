@@ -12,7 +12,7 @@ inline Print &operator<<(Print &stream, const T &value)
 inline void TODO(const char *message)
 {
     noInterrupts();
-    Serial << F("[TODO] ") << message << F("\n");
+    Serial << F("TODO: ") << message << F("\n");
     Serial.flush();
     while (true);
 }

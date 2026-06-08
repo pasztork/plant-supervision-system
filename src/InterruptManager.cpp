@@ -27,7 +27,7 @@ bool InterruptManager::RegisterInterruptHandler(IInterruptHandler *handler)
 
     if (interruptIndex >= MAX_INTERRUPTS)
     {
-        Serial << F("[ERROR] Invalid interrupt pin number: ") << handler->GetPinNumber() << F("\n");
+        Serial << F("ERROR: Invalid interrupt pin number: ") << handler->GetPinNumber() << F("\n");
         return false;
     }
 

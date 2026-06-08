@@ -19,7 +19,7 @@ public:
         SetupComponents();
         SetupInterrupts();
         m_initialized = true;
-        Serial << F("[INFO] Plant Supervision System Setup Complete!\n");
+        Serial << F("INFO: Plant Supervision System Setup Complete!\n");
         interrupts();
     }
 
@@ -27,7 +27,7 @@ public:
     {
         if (!m_initialized)
         {
-            Serial << F("[ERROR] Plant Supervision System is not initialized!\n");
+            Serial << F("ERROR: Plant Supervision System is not initialized!\n");
             return;
         }
 
@@ -36,7 +36,7 @@ public:
             m_components[i]->Loop();
         }
 
-        Serial << F("[INFO] System Health: OK\n");
+        Serial << F("INFO: System Health: OK\n");
     }
 
     bool AddComponent(ISystemComponent *component)
@@ -53,7 +53,7 @@ public:
 
         if (!foundSlot)
         {
-            Serial << F("[ERROR] Failed to add component: No available slot!\n");
+            Serial << F("ERROR: Failed to add component: No available slot!\n");
         }
 
         return false;
@@ -73,7 +73,7 @@ public:
 
         if (!foundSlot)
         {
-            Serial << F("[ERROR] Failed to add interrupt handler: No available slot!\n");
+            Serial << F("ERROR: Failed to add interrupt handler: No available slot!\n");
         }
 
         return false;
