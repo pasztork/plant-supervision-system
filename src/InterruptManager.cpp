@@ -32,6 +32,19 @@ bool InterruptManager::RegisterInterruptHandler(IInterruptHandler *handler)
     }
 
     s_interruptHandlers[interruptIndex] = handler;
-    attachInterrupt(digitalPinToInterrupt(handler->GetPinNumber()), HandleInterrupt0, RISING);
+    if (interruptIndex == 0)
+    {
+        attachInterrupt(digitalPinToInterrupt(handler->GetPinNumber()), HandleInterrupt0, RISING);
+    }
+    else if (interruptIndex == 1)
+    {
+        attachInterrupt(digitalPinToInterrupt(handler->GetPinNumber()), HandleInterrupt1, RISING);
+    }
+    else
+    {
+        Serial << F("ERROR: Invalid interrupt pin number: ") << handler->GetPinNumber() << F("\n");
+        return false;
+    }
+
     return true;
 }
