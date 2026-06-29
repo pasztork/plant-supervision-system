@@ -6,10 +6,11 @@
 #include "IInterruptHandler.h"
 #include "InterruptManager.h"
 #include "ISystemComponent.h"
+#include "Logger.h"
 #include "Utils.h"
 
 template <size_t N>
-class PlantSupervisionSystem : ISystemComponent
+class PlantSupervisionSystem : public ISystemComponent
 {
 public:
     void Setup() override
@@ -19,24 +20,24 @@ public:
         SetupComponents();
         SetupInterrupts();
         m_initialized = true;
-        Serial << F("INFO: Plant Supervision System Setup Complete!\n");
+        m_logger.Info("Plant Supervision System Setup Complete!");
         interrupts();
     }
 
-    void Loop() override
+    void Loop(unsigned long currentMillis) override
     {
         if (!m_initialized)
         {
-            Serial << F("ERROR: Plant Supervision System is not initialized!\n");
+            m_logger.Error("Plant Supervision System is not initialized!");
             return;
         }
 
         for (size_t i = 0; i < m_components.size() && m_components[i] != nullptr; i++)
         {
-            m_components[i]->Loop();
+            m_components[i]->Loop(currentMillis);
         }
 
-        Serial << F("INFO: System Health: OK\n");
+        m_logger.Info("System Health: OK");
     }
 
     bool AddComponent(ISystemComponent *component)
@@ -53,7 +54,7 @@ public:
 
         if (!foundSlot)
         {
-            Serial << F("ERROR: Failed to add component: No available slot!\n");
+            m_logger.Error("Failed to add component: No available slot!");
         }
 
         return false;
@@ -73,11 +74,13 @@ public:
 
         if (!foundSlot)
         {
-            Serial << F("ERROR: Failed to add interrupt handler: No available slot!\n");
+            m_logger.Error("Failed to add interrupt handler: No available slot!");
         }
 
         return false;
     }
+
+    inline Logger &GetLogger() { return m_logger; }
 
 private:
     void SetupComponents()
@@ -98,6 +101,7 @@ private:
 
 private:
     bool m_initialized = false;
+    Logger m_logger;
     Array<ISystemComponent *, N> m_components;
     Array<IInterruptHandler *, 2> m_interruptHandlers;
 };

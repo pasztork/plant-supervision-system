@@ -3,6 +3,7 @@
 #include <DHT.h>
 
 #include "ISystemComponent.h"
+#include "Logger.h"
 
 class DHT11Component : public ISystemComponent
 {
@@ -14,14 +15,15 @@ public:
         float m_heatIndex;
     };
 
-    explicit DHT11Component(uint8_t pin);
+    explicit DHT11Component(uint8_t pin, Logger &logger);
     ~DHT11Component() = default;
 
     void Setup() override;
-    void Loop() override;
+    void Loop(unsigned long currentMillis) override;
     inline const Measurement &GetLastMeasurement() const { return m_lastMeasurement; }
 
 private:
     DHT m_dht;
+    Logger &m_logger;
     Measurement m_lastMeasurement;
 };
