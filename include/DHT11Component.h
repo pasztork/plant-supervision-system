@@ -15,7 +15,7 @@ public:
         float m_heatIndex;
     };
 
-    explicit DHT11Component(uint8_t pin, Logger &logger);
+    DHT11Component(uint8_t pin, Logger &logger, unsigned long cycleInterval);
     ~DHT11Component() = default;
 
     void Setup() override;
@@ -25,5 +25,6 @@ public:
 private:
     DHT m_dht;
     Logger &m_logger;
+    unsigned long m_cycleInterval;
     Measurement m_lastMeasurement;
 };

@@ -34,12 +34,12 @@ void CapacitiveSoilMoistureSensorComponent::Loop(unsigned long currentMillis)
         break;
     case State::Measure:
         rawValue = analogRead(m_pinConfig.m_analogPin);
-        m_logger.Info((String("Raw Moisture Sensor Value: ") + String(rawValue)).c_str());
+        m_logger.Info("Raw Moisture Sensor Value: %u", rawValue);
 
         m_lastMeasurement.m_moisturePercentage = map(rawValue, m_calibrationValues.m_dryValue, m_calibrationValues.m_wetValue, 0, 100);
 
         // 0 is completely dry, 100 is completely wet.
-        m_logger.Info((String("Soil Moisture Level: ") + String(m_lastMeasurement.m_moisturePercentage) + "%").c_str());
+        m_logger.Info("Soil Moisture Level: %u%%", m_lastMeasurement.m_moisturePercentage);
 
         lastMeasureMillis = currentMillis;
         m_state = State::TurnOffSensor;

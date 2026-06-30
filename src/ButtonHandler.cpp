@@ -10,7 +10,7 @@ void ButtonHandler::OnInterrupt()
     if (currentInterruptTime - lastInterruptTime > DEBOUNCE_TIME_MS)
     {
         lastInterruptTime = currentInterruptTime;
-        m_logger.Info((String("INFO: Interrupt received on pin ") + String(m_pin)).c_str(), true);
+        m_logger.Info(true, "Interrupt received on pin %u", m_pin);
         m_logger.ToggleLogging();
     }
 }

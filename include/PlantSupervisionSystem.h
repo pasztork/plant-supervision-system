@@ -10,34 +10,45 @@
 #include "Utils.h"
 
 template <size_t N>
-class PlantSupervisionSystem : public ISystemComponent
+class PlantSupervisionSystem
 {
 public:
-    void Setup() override
+    PlantSupervisionSystem(unsigned long cycleInterval) : m_components(), m_interruptHandlers(), m_cycleInterval(cycleInterval), m_lastMeasurementMillis(0), m_currentMillis(0) {}
+
+    void Setup()
     {
         noInterrupts();
+        Serial.end();
         Serial.begin(9600);
         SetupComponents();
         SetupInterrupts();
         m_initialized = true;
+        m_currentMillis = millis();
+        m_lastMeasurementMillis = m_currentMillis;
         m_logger.Info("Plant Supervision System Setup Complete!");
         interrupts();
     }
 
-    void Loop(unsigned long currentMillis) override
+    void Loop()
     {
         if (!m_initialized)
         {
-            m_logger.Error("Plant Supervision System is not initialized!");
+            m_logger.Error("Plant Supervision System not initialized!");
             return;
         }
 
-        for (size_t i = 0; i < m_components.size() && m_components[i] != nullptr; i++)
-        {
-            m_components[i]->Loop(currentMillis);
-        }
+        m_currentMillis = millis();
 
-        m_logger.Info("System Health: OK");
+        if (m_currentMillis - m_lastMeasurementMillis >= m_cycleInterval)
+        {
+            for (size_t i = 0; i < m_components.size() && m_components[i] != nullptr; i++)
+            {
+                m_components[i]->Loop(m_currentMillis);
+            }
+
+            m_logger.Info("System Health: OK");
+            m_lastMeasurementMillis = m_currentMillis;
+        }
     }
 
     bool AddComponent(ISystemComponent *component)
@@ -104,4 +115,7 @@ private:
     Logger m_logger;
     Array<ISystemComponent *, N> m_components;
     Array<IInterruptHandler *, 2> m_interruptHandlers;
+    const unsigned long m_cycleInterval;
+    unsigned long m_lastMeasurementMillis;
+    unsigned long m_currentMillis;
 };
