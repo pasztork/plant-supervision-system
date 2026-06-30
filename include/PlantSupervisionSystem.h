@@ -13,7 +13,9 @@ template <size_t N>
 class PlantSupervisionSystem
 {
 public:
-    PlantSupervisionSystem(unsigned long cycleInterval) : m_components(), m_interruptHandlers(), m_cycleInterval(cycleInterval), m_lastMeasurementMillis(0), m_currentMillis(0) {}
+    PlantSupervisionSystem(unsigned long cycleInterval)
+        : m_components(), m_interruptHandlers(), m_cycleInterval(cycleInterval),
+          m_lastMeasurementMillis(0), m_currentMillis(0) {}
 
     void Setup()
     {
