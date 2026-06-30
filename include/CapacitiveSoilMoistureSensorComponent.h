@@ -2,10 +2,11 @@
 
 #include <stdint.h>
 
+#include "Condition.h"
 #include "ISystemComponent.h"
 #include "Logger.h"
 
-class CapacitiveSoilMoistureSensorComponent : public ISystemComponent
+class CapacitiveSoilMoistureSensorComponent : public ISystemComponent, public Condition
 {
 public:
     struct Measurement
@@ -36,6 +37,7 @@ public:
 
     void Setup() override;
     void Loop(unsigned long currentMillis) override;
+    bool IsSatisfied() const override { return m_lastMeasurement.m_moisturePercentage < 30; }
     inline const Measurement &GetLastMeasurement() const { return m_lastMeasurement; }
 
 private:
